@@ -24,7 +24,7 @@ grails.project.dependency.resolution = {
 		mavenRepo "http://download.eclipse.org/jgit/maven"
     }
     dependencies {
-		compile 'org.eclipse.jgit:org.eclipse.jgit:3.3.1.201403241930-r'
+		compile 'org.eclipse.jgit:org.eclipse.jgit:3.5.1.201410131835-r'
     }
 
 	plugins {
@@ -35,7 +35,7 @@ grails.project.dependency.resolution = {
 		runtime ":zipped-resources:1.0"
 		runtime ":cached-resources:1.0"
 		runtime ":yui-minify-resources:0.1.5"
-		runtime ":twitter-bootstrap:2.0.2.25"
+		runtime ":twitter-bootstrap:2.3.2"
 
 		build ":tomcat:$grailsVersion"
 		
