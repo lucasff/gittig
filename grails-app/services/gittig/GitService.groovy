@@ -36,7 +36,7 @@ class GitService {
 	/**
 	 * Create a mirror clone of the url at the path
 	 */
-    def clone(url, path, progressMonitor) {
+	def clone(url, path, progressMonitor) {
 		if (url.startsWith('http') && !(url.endsWith('.git'))) {
 			// XXX: JGit requires a .git at the end when url is http. Check this.
 			url = url + '.git'
@@ -60,7 +60,7 @@ class GitService {
 			log.error e
 			throw new HookJobException(e.cause.message)
 		}
-    }
+	}
 
 	/**
 	 * Fetch the git repo at the given path
@@ -69,19 +69,18 @@ class GitService {
 		log.debug "Updating ${path}"
 		try {
 			RepositoryBuilder builder = new RepositoryBuilder()
-			Repository repository = builder.setGitDir(new File(path + '/.git')).readEnvironment().build()
+			Repository repository = builder
+				.setWorkTree(new File(path))
+				.setGitDir(null)
+				.readEnvironment()
+				.build()
 			Git git = new Git(repository)
 			PullCommand pullCmd = git.pull()
 				.setProgressMonitor(progressMonitor)
-			try {
-				PullResult result = pullCmd.call()
-			} catch (GitAPIException e) {
-				log.error e
-	                        throw new HookJobException(e.message)
-			}
-			FetchResult fetchResult = result.getFetchResult()
-			log.debug "Done updating ${path}"
-			return result
+			PullResult pullResult = pullCmd.call()
+			/* FetchResult fetchResult = result.getFetchResult() */
+			log.debug "Done updating ${path} with pullResult: ${pullResult}"
+			return pullResult
 		} catch (JGitInternalException e) {
 			log.error e.cause
 			throw new HookJobException(e.cause.message)
@@ -99,7 +98,11 @@ class GitService {
 	 */
 	def getRemoteUrl(path) {
 		RepositoryBuilder builder = new RepositoryBuilder()
-		Repository repository = builder.setGitDir(new File(path + '/.git')).readEnvironment().build()
+		Repository repository = builder
+			.setWorkTree(new File(path))
+			.setGitDir(null)
+			.readEnvironment()
+			.build()
 		repository.config.getString('remote', 'origin', 'url')
 	}
 	
