@@ -10,12 +10,12 @@
 			<div class='alert alert-error'>${flash.message}</div>
 		</g:if>
 
-		<form action="${postUrl}" method="POST" id="loginForm" autocomplete="off">
+		<form action="${postUrl}" method="POST" id="loginForm" >
 			<fieldset>
 				<div class="control-group">
 					<label for='username'><g:message code="springSecurity.login.username.label"/>:</label>
 					<div class="controls">
-						<input type='text' class='text_' name='j_username' id='username'/>
+						<input type='text' class='text_' name='j_username' id='username' placeholder='admin' />
 					</div>
 				</div>
 				<div class="control-group">

@@ -4,23 +4,25 @@
 		<meta name="layout" content="main" />
    </head>
 	<body>
-		<ul class="thumbnails">
+		<div class="row">
 			<g:each in="${hooks}" var="hook">
-			<li class="span4">
-				<div class="thumbnail">
-					<img src="${resource(dir: 'images', file: hook + '.png')}" width="150" />
-					<center><h5><g:createLink controller="hook" action="${hook}" absolute="true" /></h5></center>
+			<div class="span4" style="text-align: center;">
+				<div class="well-large">
+					<figure>
+						<img src="${resource(dir: 'images', file: hook + '.png')}" />
+					</figure>
+					<input type="text" value="<g:createLink controller="hook" action="${hook}" absolute="true" />" readonly />
 				</div>
-			</li>
+			</div>
 			</g:each>
-		</ul>
+		</div>
 		<sec:ifLoggedIn>
 			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th><g:message code="repo.path.label" /></th>
-						<th><sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_ADMINISTRATORS"><g:link controller="queue" action="enqueueAll" class="btn btn-small"><i class="icon-chevron-left"></i><g:message code="repo.updateAll.label" /></g:link></sec:ifAnyGranted></th>
 						<th><g:message code="repo.url.label" /></th>
+						<th><sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_ADMINISTRATORS"><g:link controller="queue" action="enqueueAll" class="btn btn-info btn-small"><i class="icon-white icon-refresh"></i>&nbsp;<g:message code="repo.updateAll.label" /></g:link></sec:ifAnyGranted></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -28,8 +30,8 @@
 					<g:each in="${repos}" var="repo">
 						<tr>
 							<td>${repo.path}</td>
-							<td><sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_ADMINISTRATORS"><g:if test="${repo.remote?.length() > 0}"><g:link controller="queue" action="enqueue" class="btn btn-small" params="[remote: repo.remote]"><i class="icon-chevron-left"></i><g:message code="repo.update.label" /></g:link></g:if></sec:ifAnyGranted></td>
 							<td><code>${repo.remote}</code></td>
+							<td><sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_ADMINISTRATORS"><g:if test="${repo.remote?.length() > 0}"><g:link controller="queue" action="enqueue" class="btn btn-small" params="[remote: repo.remote]"><i class="icon-refresh"></i>&nbsp;<g:message code="repo.update.label" /></g:link></g:if></sec:ifAnyGranted></td>
 						</tr>
 					</g:each>
 					</g:if>
@@ -43,7 +45,7 @@
 						<tr>
 							<td></td>
 							<td></td>
-							<td><g:textField name="remote" /> <g:submitButton name="add" value="${message(code: 'repo.add.label')}" /></td>
+							<td><g:textField name="remote" style="margin-bottom: 0 !important" /> <g:submitButton name="add" value="${message(code: 'repo.add.label')}" class="btn" /></td>
 						</tr>
 					</g:form>
 					</sec:ifAnyGranted>
