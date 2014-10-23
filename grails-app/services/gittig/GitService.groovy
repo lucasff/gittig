@@ -69,7 +69,7 @@ class GitService {
 		log.debug "Updating ${path}"
 		try {
 			RepositoryBuilder builder = new RepositoryBuilder()
-			Repository repository = builder.setGitDir(new File(path)).readEnvironment().build()
+			Repository repository = builder.setGitDir(new File(path + '/.git')).readEnvironment().build()
 			Git git = new Git(repository)
 			PullCommand pullCmd = git.pull()
 				.setProgressMonitor(progressMonitor)
@@ -81,7 +81,7 @@ class GitService {
 			}
 			FetchResult fetchResult = result.getFetchResult()
 			log.debug "Done updating ${path}"
-			return fetchResult
+			return result
 		} catch (JGitInternalException e) {
 			log.error e.cause
 			throw new HookJobException(e.cause.message)
@@ -99,7 +99,7 @@ class GitService {
 	 */
 	def getRemoteUrl(path) {
 		RepositoryBuilder builder = new RepositoryBuilder()
-		Repository repository = builder.setGitDir(new File(path)).readEnvironment().build()
+		Repository repository = builder.setGitDir(new File(path + '/.git')).readEnvironment().build()
 		repository.config.getString('remote', 'origin', 'url')
 	}
 	
