@@ -46,10 +46,11 @@ class GitService {
 			Git.cloneRepository()
 				.setURI(url)
 				.setDirectory(new File(path))
-				.setBare(true)
+				.setBare(false)
 				.setCloneAllBranches(true)
-				.setNoCheckout(true)
+				.setNoCheckout(false)
 				.setProgressMonitor(progressMonitor)
+				.setBranch('master')
 				.call()
 			log.debug "Done cloning ${url} at ${path}"
 		} catch (JGitInternalException e) {
@@ -70,12 +71,17 @@ class GitService {
 			RepositoryBuilder builder = new RepositoryBuilder()
 			Repository repository = builder.setGitDir(new File(path)).readEnvironment().build()
 			Git git = new Git(repository)
-			FetchResult result = git.fetch()
-				.setRemoveDeletedRefs(true)
+			PullCommand pullCmd = git.pull()
 				.setProgressMonitor(progressMonitor)
-				.call()
+			try {
+				PullResult result = pullCmd.call()
+			} catch (GitAPIException e) {
+				log.error e
+	                        throw new HookJobException(e.message)
+			}
+			FetchResult fetchResult = result.getFetchResult()
 			log.debug "Done updating ${path}"
-			return result
+			return fetchResult
 		} catch (JGitInternalException e) {
 			log.error e.cause
 			throw new HookJobException(e.cause.message)
