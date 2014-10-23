@@ -86,7 +86,8 @@ class PathService implements ApplicationContextAware {
 			def locationResolverName = grailsApplication.config.app.locationResolver
 			def maxdepth = depths[locationResolverName]
 			if (maxdepth) {
-				def cmd = "find ${baseDir} -type d -name *.git -maxdepth ${maxdepth}"
+				def cmd = "find ${baseDir} -type d -mindepth 1 -maxdepth ${maxdepth}"
+				log.debug "cmd going to run as ${cmd}"
 				return cmd.execute().text.readLines()
 			} else {
 				log.warn "Invalid locationResolver: ${locationResolverName}"
